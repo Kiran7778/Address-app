@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #2C3E50;
+            font-family: 'Arial', sans-serif;
+            color: #ECF0F1;
+        }
+        .dashboard-container {
+            max-width: 900px;
+            margin: auto;
+            padding: 20px;
+            background: rgba(44, 62, 80, 0.9);
+            border-radius: 10px;
+            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.3);
+        }
+        .btn-custom {
+            font-size: 16px;
+            transition: background-color 0.3s ease-in-out, transform 0.2s;
+        }
+        .btn-custom:hover {
+            transform: scale(1.05);
+        }
+        #calendarContainer, #reviewsContainer {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            background: #34495E;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+        }
+        .transition-fade {
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+        .transition-fade.show {
+            opacity: 1;
+            display: block;
+        }
+    </style>
+</head>
+<body onload="checkLogin();">
+
+    <div class="container mt-5">
+        <div class="dashboard-container p-4">
+            <h2 class="text-center mb-4">Dashboard</h2>
+            <div class="row">
+                <div class="col-md-3">
+                    <button class="btn btn-primary w-100 mb-3 btn-custom" onclick="navigate('address-record.html')"><i class="fas fa-address-book"></i> Address Records</button>
+                    <button class="btn btn-success w-100 mb-3 btn-custom" onclick="navigate('graphs.html')"><i class="fas fa-chart-line"></i> View Graphs</button>
+                    <button class="btn btn-warning w-100 mb-3 btn-custom" onclick="showCalendar()"><i class="fas fa-calendar-alt"></i> Date & Time</button>
+                    <button class="btn btn-secondary w-100 mb-3 btn-custom" onclick="showReviews()"><i class="fas fa-eye"></i> View Reviews</button>
+                    <button class="btn btn-danger w-100 btn-custom" onclick="logout()"><i class="fas fa-door-open"></i> Logout</button>
+                </div>
+                <div class="col-md-9">
+                    <p class="lead">Welcome to your dashboard! You can access address records, view statistics, and manage your contacts.</p>
+                    <div id="calendarContainer" class="transition-fade">
+                        <input type="date" class="form-control" id="datePicker" onchange="showSubmitButton()">
+                        <p id="currentDateTime" class="mt-2"></p>
+                        <button id="submitDateButton" class="btn btn-primary mt-3" style="display: none;" onclick="submitDate()">Submit Date</button>
+                    </div>
+                    <div id="reviewsContainer" class="transition-fade">
+                        <h5>Reviews:</h5>
+                        <ul>
+                            <li>"Great platform! Very useful."</li>
+                            <li>"Easy to navigate and well-designed."</li>
+                            <li>"Highly recommended for professionals."</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function checkLogin() {
+            if (!localStorage.getItem("loggedInUser")) {
+                alert("Please log in first!");
+                window.location.assign("index.html");
+            }
+        }
+
+        function logout() {
+            if (confirm("Are you sure you want to log out?")) {
+                localStorage.removeItem("loggedInUser");
+                window.location.assign("index.html");
+            }
+        }
+
+        function navigate(page) {
+            window.location.assign(page);
+        }
+
+        function showCalendar() {
+            let calendar = document.getElementById("calendarContainer");
+            let dateTime = document.getElementById("currentDateTime");
+            let now = new Date();
+            dateTime.innerHTML = `Current Date & Time: ${now.toLocaleString()}`;
+            calendar.classList.toggle("show");
+        }
+
+        function showReviews() {
+            let reviews = document.getElementById("reviewsContainer");
+            reviews.classList.toggle("show");
+        }
+
+        function showSubmitButton() {
+            let datePicker = document.getElementById("datePicker");
+            let submitButton = document.getElementById("submitDateButton");
+
+            if (datePicker.value) {
+                submitButton.style.display = 'block';  // Show the submit button when a date is selected
+            } else {
+                submitButton.style.display = 'none';   // Hide the submit button if no date is selected
+            }
+        }
+
+        function submitDate() {
+            let selectedDate = document.getElementById("datePicker").value;
+            alert("You selected: " + selectedDate);  // Action when submitting the selected date
+        }
+    </script>
+</body>
+</html>
